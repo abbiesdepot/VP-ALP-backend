@@ -6,3 +6,18 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id             Int         @id @default(autoincrement())
+  username       String      @db.VarChar(100)
+  email          String      @unique @db.VarChar(150)
+  password       String      @db.VarChar(100)
+  current_streak Int?        @default(0)
+  total_focus_time Int?      @default(0)
+  created_at     DateTime    @default(now())
+
+  //schedules      Schedule[]
+  //rewards        Reward[]
+
+  @@map("users")
+}
