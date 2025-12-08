@@ -34,7 +34,7 @@ model Schedule {
   user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   tasks              Task[]
-  //activities         ScheduleActivity[]
+  activities         ScheduleActivity[]
 
   @@map("schedules")
 }
@@ -50,4 +50,21 @@ model Task {
   schedule     Schedule   @relation(fields: [schedule_id], references: [id], onDelete: Cascade)
 
   @@map("tasks")
+}
+
+model ScheduleActivity {
+  id           Int       @id @default(autoincrement())
+  icon_name    String    @db.VarChar(150)
+  start_time   DateTime  @db.Time
+  end_time     DateTime  @db.Time
+  description  String?   @db.Text
+  color        String?   @db.VarChar(50)
+  created_at   DateTime  @default(now())
+  is_valid_today Boolean @default(true)
+  isCompleted  Boolean   @default(false)
+
+  schedule_id  Int
+  schedule     Schedule  @relation(fields: [schedule_id], references: [id], onDelete: Cascade)
+
+  @@map("schedule_activities")
 }
