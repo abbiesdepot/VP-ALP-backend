@@ -17,7 +17,7 @@ model User {
   created_at     DateTime    @default(now())
 
   schedules      Schedule[]
-  //rewards        Reward[]
+  rewards        Reward[]
 
   @@map("users")
 }
@@ -68,3 +68,17 @@ model ScheduleActivity {
 
   @@map("schedule_activities")
 }
+
+model Reward {
+  id             Int        @id @default(autoincrement())
+  milestone      Int
+  description    String?    @db.VarChar(255)
+  date_achieved  DateTime?  @db.Timestamp
+  streak_required Int
+
+  user_id        Int
+  user           User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("rewards")
+}
+
