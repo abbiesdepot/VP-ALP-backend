@@ -16,8 +16,25 @@ model User {
   total_focus_time Int?      @default(0)
   created_at     DateTime    @default(now())
 
-  //schedules      Schedule[]
+  schedules      Schedule[]
   //rewards        Reward[]
 
   @@map("users")
+}
+
+model Schedule {
+  id                 Int                 @id @default(autoincrement())
+  date               DateTime            @db.Date
+  total_tasks        Int                 @default(0)
+  completed_tasks    Int                 @default(0)
+  progress_percentage Float              @default(0)
+  created_at         DateTime            @default(now())
+
+  user_id            Int
+  user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  //tasks              Task[]
+  //activities         ScheduleActivity[]
+
+  @@map("schedules")
 }
