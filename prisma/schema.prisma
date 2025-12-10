@@ -17,7 +17,8 @@ model User {
   created_at     DateTime    @default(now())
 
   schedules      Schedule[]
-  rewards        Reward[]
+  rewards        UserReward[]
+  progress       UserProgress?
 
   @@map("users")
 }
@@ -69,16 +70,56 @@ model ScheduleActivity {
   @@map("schedule_activities")
 }
 
-model Reward {
-  id             Int        @id @default(autoincrement())
-  milestone      Int
-  description    String?    @db.VarChar(255)
-  date_achieved  DateTime?  @db.Timestamp
-  streak_required Int
+model RewardDefinition {
+  id           Int            @id @default(autoincrement())
+  trigger_type RewardTrigger
+  threshold    Int
+  title        String         @db.VarChar(150)
+  description  String?        @db.VarChar(255)
+  asset_url    String?        @db.VarChar(255)
+  created_at   DateTime       @default(now())
 
-  user_id        Int
-  user           User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_rewards UserReward[]
 
-  @@map("rewards")
+  @@unique([trigger_type, threshold])
+  @@map("reward_definitions")
+}
+
+model UserReward {
+  id                    Int              @id @default(autoincrement())
+  status                RewardStatus     @default(LOCKED)
+  achieved_at           DateTime?
+
+  user_id               Int
+  user                  User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  reward_definition_id  Int
+  reward_definition     RewardDefinition @relation(fields: [reward_definition_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, reward_definition_id])
+  @@map("user_rewards")
+}
+
+model UserProgress {
+  user_id              Int      @id
+  current_streak       Int      @default(0)
+  last_completion_date DateTime?
+  task_completed_count Int      @default(0)
+  last_daily_completion DateTime?
+
+  user                 User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_progress")
+}
+
+enum RewardTrigger {
+  STREAK
+  TASK_COUNT
+  DAILY_COMPLETION
+}
+
+enum RewardStatus {
+  LOCKED
+  UNLOCKED
 }
 
