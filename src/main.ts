@@ -1,19 +1,15 @@
 import express from "express"
 import { PORT } from "./utils/env-util"
+import { publicRouter } from "./routes/public-api"
 import { errorMiddleware } from "./middlewares/error-middleware"
-import { rewardRoutes } from "./routes/reward-routes"
-
+import { privateRouter } from "./routes/private-api"
 const app = express()
 
 app.use(express.json())
-
-// Routes
-app.use("/rewards", rewardRoutes)
-
-// Error middleware
+app.use("/api", publicRouter)
+app.use("/api", privateRouter)
 app.use(errorMiddleware)
 
-const port = PORT || 3000
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
+app.listen(PORT || 6000, () => {
+    console.log(`Connected to port ${PORT}`)
 })
