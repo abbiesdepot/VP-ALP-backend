@@ -9,6 +9,7 @@ export class ScheduleActivityController {
     static async create(req: Request, res: Response, next: NextFunction) {
         try {
             const request: CreateScheduleActivityRequest = req.body
+            
             const response = await ScheduleActivityService.create(request)
 
             res.status(201).json({ data: response })
