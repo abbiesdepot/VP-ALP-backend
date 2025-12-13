@@ -10,8 +10,8 @@ export class ScheduleActivityService {
 
         const activity = await prismaClient.scheduleActivity.create({
             data: {
-                schedule_id: validated.schedule_id,
-                icon_name: validated.icon_name,
+                schedule_id: validated.scheduleId,
+                icon_name: validated.iconName,
                 start_time: new Date(validated.startTime),
                 end_time: new Date(validated.endTime),
                 description: validated.description,
@@ -19,16 +19,22 @@ export class ScheduleActivityService {
             }
         });
 
-
         return toScheduleActivityResponse(activity)
     }
 
     static async update(request: UpdateScheduleActivityRequest) {
         const validated = Validation.validate(ScheduleActivityValidation.UPDATE, request)
 
+        const updateData: any = {};
+        if (validated.iconName) updateData.icon_name = validated.iconName;
+        if (validated.startTime) updateData.start_time = new Date(validated.startTime);
+        if (validated.endTime) updateData.end_time = new Date(validated.endTime);
+        if (validated.description) updateData.description = validated.description;
+        if (validated.isCompleted !== undefined) updateData.isCompleted = validated.isCompleted;
+
         const activity = await prismaClient.scheduleActivity.update({
             where: { id: validated.id },
-            data: validated
+            data: updateData
         })
 
         return toScheduleActivityResponse(activity)

@@ -14,7 +14,7 @@ export class ScheduleService {
     const schedule = await prismaClient.schedule.create({
         data: {
             date: validated.date,
-            user_id: validated.user_id,
+            user_id: validated.userId,
             total_tasks: 0,
             completed_tasks: 0,
             progress_percentage: 0

@@ -1,37 +1,37 @@
 export interface CreateScheduleActivityRequest {
-    schedule_id: number
-    icon_name: string
-    startTime: string // HH:mm
-    endTime: string   // HH:mm
-    description?: string
+    scheduleId: number;
+    iconName: string;
+    startTime: string;
+    endTime: string;
+    description?: string;
 }
 
 export interface UpdateScheduleActivityRequest {
-    id: number
-    icon_name?: string
-    startTime?: string
-    endTime?: string
-    description?: string
-    isCompleted?: boolean
+    id: number;
+    iconName?: string;
+    startTime?: string;
+    endTime?: string;
+    description?: string;
+    isCompleted?: boolean;
 }
 
 export interface ScheduleActivityResponse {
-    id: number
-    schedule_id: number
-    icon_name: string
-    startTime: string
-    endTime: string
-    description: string | null
-    isCompleted: boolean
+    id: number;
+    scheduleId: number;
+    iconName: string;
+    startTime: string;
+    endTime: string;
+    description: string | null;
+    isCompleted: boolean;
 }
 
 export function toScheduleActivityResponse(activity: any): ScheduleActivityResponse {
     return {
         id: activity.id,
-        schedule_id: activity.schedule_id,
-        icon_name: activity.icon_name,
-        startTime: activity.startTime,
-        endTime: activity.endTime,
+        scheduleId: activity.schedule_id,
+        iconName: activity.icon_name,
+        startTime: activity.start_time ? new Date(activity.start_time).toISOString() : "",
+        endTime: activity.end_time ? new Date(activity.end_time).toISOString() : "",
         description: activity.description,
         isCompleted: activity.isCompleted,
     }

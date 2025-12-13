@@ -3,7 +3,7 @@ import { z, ZodType } from "zod"
 export class ScheduleActivityValidation {
     static readonly CREATE: ZodType = z.object({
         scheduleId: z.number(),
-        iconId: z.number(),
+        iconName: z.string().min(1),
         startTime: z.string().min(1),
         endTime: z.string().min(1),
         description: z.string().optional(),
@@ -11,7 +11,7 @@ export class ScheduleActivityValidation {
 
     static readonly UPDATE: ZodType = z.object({
         id: z.number(),
-        iconId: z.number().optional(),
+        iconName: z.string().optional(),
         startTime: z.string().optional(),
         endTime: z.string().optional(),
         description: z.string().optional(),
