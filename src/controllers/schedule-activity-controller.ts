@@ -20,10 +20,12 @@ export class ScheduleActivityController {
 
     static async update(req: Request, res: Response, next: NextFunction) {
         try {
-            const request: UpdateScheduleActivityRequest = req.body
-            const response = await ScheduleActivityService.update(request)
+            const request: UpdateScheduleActivityRequest = req.body as UpdateScheduleActivityRequest;
 
-            res.json({ data: response })
+            const response = await ScheduleActivityService.update(request);
+            res.status(200).json({
+                data: response
+            });
         } catch (error) {
             next(error)
         }

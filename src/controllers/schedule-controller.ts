@@ -38,15 +38,4 @@ export class ScheduleController {
             next(error)
         }
     }
-
-    static async delete(req: Request, res: Response, next: NextFunction) {
-        try {
-            const id = Number(req.params.id)
-            const response = await ScheduleService.delete(id)
-
-            res.json({ data: response })
-        } catch (error) {
-            next(error)
-        }
-    }
 }

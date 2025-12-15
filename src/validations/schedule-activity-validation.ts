@@ -12,8 +12,8 @@ export class ScheduleActivityValidation {
     static readonly UPDATE: ZodType = z.object({
         id: z.number(),
         iconName: z.string().optional(),
-        startTime: z.string().optional(),
-        endTime: z.string().optional(),
+        startTime: z.string().datetime().optional(),
+        endTime: z.string().datetime().optional(),
         description: z.string().optional(),
         isCompleted: z.boolean().optional(),
     })
