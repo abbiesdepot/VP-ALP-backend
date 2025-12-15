@@ -6,10 +6,7 @@ import { CreateScheduleRequest, UpdateScheduleRequest, toScheduleResponse } from
 export class ScheduleService {
 
     static async create(request: CreateScheduleRequest) {
-    const validated = Validation.validate(
-        ScheduleValidation.CREATE, 
-        request
-    );
+    const validated = Validation.validate(ScheduleValidation.CREATE, request);
 
     const schedule = await prismaClient.schedule.create({
         data: {
@@ -23,7 +20,6 @@ export class ScheduleService {
 
     return toScheduleResponse(schedule);
 }
-
 
     static async update(request: UpdateScheduleRequest) {
         const validated = Validation.validate(ScheduleValidation.UPDATE, request)
@@ -42,12 +38,5 @@ export class ScheduleService {
         })
 
         return schedules.map(toScheduleResponse)
-    }
-
-    static async delete(id: number) {
-        await prismaClient.schedule.delete({
-            where: { id }
-        })
-        return { message: "Schedule deleted" }
     }
 }

@@ -11,7 +11,6 @@ privateRoute.use(authMiddleware)
 privateRoute.post("/schedule", ScheduleController.create)
 privateRoute.put("/schedule", ScheduleController.update)
 privateRoute.get("/schedule/user/:userId", ScheduleController.getByUser)
-privateRoute.delete("/schedule/:id", ScheduleController.delete)
 
 privateRoute.post("/task", TaskController.create)
 privateRoute.put("/task", TaskController.update)
@@ -19,7 +18,7 @@ privateRoute.get("/task/user/:userId", TaskController.getByUser)
 privateRoute.delete("/task/:id", TaskController.delete)
 
 privateRoute.post("/schedule-activity", ScheduleActivityController.create)
-privateRoute.put("/schedule-activity", ScheduleActivityController.update)
+privateRoute.put("/schedule-activity/:id", ScheduleActivityController.update)
 privateRoute.get("/schedule-activity/schedule/:scheduleId",ScheduleActivityController.getBySchedule)
 privateRoute.delete("/schedule-activity/:id", ScheduleActivityController.delete)
 

@@ -6,6 +6,9 @@ export interface CreateScheduleRequest {
 export interface UpdateScheduleRequest {
     id: number;
     date?: string;
+    totalTasks?: number;
+    completedTasks?: number;
+    progressPercentage?: number;
 }
 
 export interface ScheduleResponse {

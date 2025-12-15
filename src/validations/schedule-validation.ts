@@ -9,5 +9,8 @@ export class ScheduleValidation {
     static readonly UPDATE: ZodType = z.object({
         id: z.number(),
         date: z.string().optional(),
+        totalTasks: z.number().optional(),
+        completedTasks: z.number().optional(),
+        progressPercentage: z.number().optional()
     })
 }
