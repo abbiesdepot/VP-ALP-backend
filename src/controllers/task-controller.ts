@@ -1,15 +1,17 @@
-import { Request, Response, NextFunction } from "express"
+import { Response, NextFunction } from "express"
 import { TaskService } from "../services/task-service"
 import {
     CreateTaskRequest,
     UpdateTaskRequest,
 } from "../models/task-model"
+import { UserRequest } from "../models/user-request-model"
 
 export class TaskController {
-    static async create(req: Request, res: Response, next: NextFunction) {
+    static async create(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const request: CreateTaskRequest = req.body
-            const response = await TaskService.create(request)
+            const userId = req.user!.id
+            const response = await TaskService.create(request, userId)
 
             res.status(201).json({ data: response })
         } catch (error) {
@@ -17,7 +19,7 @@ export class TaskController {
         }
     }
 
-    static async update(req: Request, res: Response, next: NextFunction) {
+    static async update(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const request: UpdateTaskRequest = req.body
             const response = await TaskService.update(request)
@@ -28,7 +30,7 @@ export class TaskController {
         }
     }
 
-    static async getByUser(req: Request, res: Response, next: NextFunction) {
+    static async getByUser(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const userId = Number(req.params.userId)
             const response = await TaskService.getByUser(userId)
@@ -39,7 +41,7 @@ export class TaskController {
         }
     }
 
-    static async delete(req: Request, res: Response, next: NextFunction) {
+    static async delete(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const id = Number(req.params.id)
             const response = await TaskService.delete(id)

@@ -7,16 +7,39 @@ import { ResponseError } from "../error/response-error"
 
 export class TaskService {
 
-    static async create(request: CreateTaskRequest) {
+    static async create(request: CreateTaskRequest, userId: number) {
         const validated = Validation.validate(TaskValidation.CREATE, request)
 
-        const task = await prismaClient.task.create({
-        data: {
-            title: validated.title,
-            deadline: validated.deadline,
-            schedule_id: validated.schedule_id,
-            is_completed: false,
+        // ngevalidate schedule ownership kalo schedule_id ada
+        if (validated.schedule_id !== undefined && validated.schedule_id !== null) {
+            const schedule = await prismaClient.schedule.findUnique({
+                where: { id: validated.schedule_id },
+            })
+
+            if (!schedule) {
+                throw new ResponseError(404, "Schedule not found")
             }
+
+            if (schedule.user_id !== userId) {
+                throw new ResponseError(403, "You don't have permission to add tasks to this schedule")
+            }
+        }
+
+        const data: any = {
+            title: validated.title,
+            description: validated.description,
+            deadline: validated.deadline,
+            is_completed: false,
+            user_id: userId,
+        }
+
+        if (validated.schedule_id !== undefined) {
+            data.schedule_id = validated.schedule_id
+        }
+
+        const task = await prismaClient.task.create({
+            data,
+            include: { schedule: true },
         });
 
         return toTaskResponse(task)
@@ -41,6 +64,7 @@ export class TaskService {
             where: { id: validated.id },
             data: {
                 title: validated.title,
+                description: validated.description,
                 is_completed: validated.is_completed,
             },
             include: { schedule: true },
@@ -69,8 +93,14 @@ export class TaskService {
 
     static async getByUser(user_id: number) {
         const tasks = await prismaClient.task.findMany({
-            where: { schedule: { user_id } },
+            where: {
+                OR: [
+                    { schedule: { user_id } },
+                    { AND: [{ schedule_id: null }, { user_id }] },
+                ],
+            },
             include: { schedule: true },
+            orderBy: { deadline: "asc" },
         })
 
         return tasks.map(toTaskResponse)
