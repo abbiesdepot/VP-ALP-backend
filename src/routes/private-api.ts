@@ -3,6 +3,7 @@ import { authMiddleware } from "../middlewares/auth-middleware"
 import { ScheduleController } from "../controllers/schedule-controller"
 import { TaskController } from "../controllers/task-controller"
 import { ScheduleActivityController } from "../controllers/schedule-activity-controller"
+import { RewardController } from "../controllers/reward-controller"
 
 const privateRoute = Router()
 
@@ -21,6 +22,8 @@ privateRoute.post("/schedule-activity", ScheduleActivityController.create)
 privateRoute.put("/schedule-activity/:id", ScheduleActivityController.update)
 privateRoute.get("/schedule-activity/schedule/:scheduleId",ScheduleActivityController.getBySchedule)
 privateRoute.delete("/schedule-activity/:id", ScheduleActivityController.delete)
+
+privateRoute.get("/rewards/gallery", RewardController.getGallery)
 
 
 export const privateRouter = privateRoute
