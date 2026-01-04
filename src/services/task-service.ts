@@ -70,21 +70,26 @@ export class TaskService {
             include: { schedule: true },
         })
 
-        if (becameCompleted && existingTask.schedule) {
-            await RewardService.handleTaskCompleted(existingTask.schedule.user_id)
+        if (becameCompleted) {
+            const userId = existingTask.user_id || existingTask.schedule?.user_id
+            if (userId) {
+                await RewardService.handleTaskCompleted(userId)
+            }
 
-            const [totalTasks, completedTasks] = await Promise.all([
-                prismaClient.task.count({ where: { schedule_id: taskRaw.schedule_id } }),
-                prismaClient.task.count({
-                    where: { schedule_id: taskRaw.schedule_id, is_completed: true },
-                }),
-            ])
+            if (existingTask.schedule && taskRaw.schedule_id) {
+                const [totalTasks, completedTasks] = await Promise.all([
+                    prismaClient.task.count({ where: { schedule_id: taskRaw.schedule_id } }),
+                    prismaClient.task.count({
+                        where: { schedule_id: taskRaw.schedule_id, is_completed: true },
+                    }),
+                ])
 
-            if (totalTasks > 0 && totalTasks === completedTasks) {
-                await RewardService.handleDailyCompletion(
-                    existingTask.schedule.user_id,
-                    existingTask.schedule.date
-                )
+                if (totalTasks > 0 && totalTasks === completedTasks) {
+                    await RewardService.handleDailyCompletion(
+                        existingTask.schedule.user_id,
+                        existingTask.schedule.date
+                    )
+                }
             }
         }
 
